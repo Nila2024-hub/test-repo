@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dodging Box Game</title>
+  <style>
+    #player, #enemy {
+      position: absolute;
+      width: 50px; height: 50px;
+    }
+    #player {
+      bottom: 10px; left: 50%;
+      background: blue;
+    }
+    #enemy {
+      top: 0px; left: 50%;
+      background: red;
+    }
+  </style>
+</head>
+<body>
+  <h2>Use Left/Right Arrow to Dodge!</h2>
+  <div id="player"></div>
+  <div id="enemy"></div>
+  <script>
+    const player = document.getElementById('player');
+    const enemy = document.getElementById('enemy');
+    let pos = window.innerWidth / 2;
+
+    document.onkeydown = function(e) {
+      if (e.key === 'ArrowLeft') pos -= 20;
+      else if (e.key === 'ArrowRight') pos += 20;
+      player.style.left = pos + 'px';
+    };
+
+    function dropEnemy() {
+      let enemyTop = 0;
+      const drop = setInterval(() => {
+        enemyTop += 5;
+        enemy.style.top = enemyTop + 'px';
+        if (enemyTop > window.innerHeight - 60) {
+          if (Math.abs(pos - parseInt(enemy.style.left)) < 50) {
+            alert('Game Over!');
+            clearInterval(drop);
+          } else {
+            enemyTop = 0;
+            enemy.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+          }
+        }
+      }, 30);
+    }
+
+    dropEnemy();
+  </script>
+</body>
+</html>

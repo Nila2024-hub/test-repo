@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Memory Match Game</title>
+  <style>
+    .card {
+      width: 60px; height: 60px;
+      display: inline-block; margin: 5px;
+      background: gray; color: white;
+      font-size: 24px; text-align: center; line-height: 60px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Memory Match Game</h2>
+  <div id="game"></div>
+  <script>
+    const values = [1,1,2,2,3,3].sort(() => Math.random() - 0.5);
+    const game = document.getElementById('game');
+    let first = null, lock = false;
+
+    values.forEach((val, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.value = val;
+      card.onclick = function () {
+        if (lock || card.textContent) return;
+        card.textContent = val;
+        if (!first) {
+          first = card;
+        } else {
+          if (first.dataset.value === card.dataset.value) {
+            first = null;
+          } else {
+            lock = true;
+            setTimeout(() => {
+              card.textContent = '';
+              first.textContent = '';
+              first = null;
+              lock = false;
+            }, 1000);
+          }
+        }
+      };
+      game.appendChild(card);
+    });
+  </script>
+</body>
+</html>
