@@ -1,0 +1,1377 @@
+/* Custom Reset and Variables */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    padding-top: 90px; /* Leave space for Sticky Header */
+    padding-bottom: 100px; /* Leave space for Sticky Bottom Nav */
+    position: relative;
+    overflow-x: hidden;
+    transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 1. SPLASH SCREEN STYLES */
+.splash-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0f172a;
+    color: white;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease, visibility 0.5s;
+}
+
+.splash-content {
+    text-align: center;
+}
+
+.splash-logo {
+    width: 100px;
+    height: 100px;
+    animation: floatAnim 3s ease-in-out infinite;
+}
+
+.splash-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-top: 16px;
+    letter-spacing: 1px;
+}
+
+.splash-subtitle {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    margin-top: 4px;
+}
+
+.splash-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top: 4px solid #3b82f6;
+    border-radius: 50%;
+    margin: 24px auto 0 auto;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes floatAnim {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Raining/Sun Dynamic Weather Background Overlays */
+.weather-bg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.rain-drop {
+    position: absolute;
+    top: -50px;
+    width: 2px;
+    height: 35px;
+    background: linear-gradient(transparent, rgba(59, 130, 246, 0.4));
+    animation: fall 1.8s linear infinite;
+}
+
+@keyframes fall {
+    0% { transform: translateY(-50px); }
+    100% { transform: translateY(105vh); }
+}
+
+/* 2. STICKY HEADER BAR */
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid #e2e8f0;
+    padding: 14px 24px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Fixed selector to match your HTML class 'header-logo' and restricted size dimensions */
+.header-logo {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 8px; /* Clean rounded edges like modern native app dashboard icons */
+}
+
+.brand-name {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.brand-sub {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.clock-group {
+    text-align: right;
+}
+
+.time-string {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.date-string {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+/* Main Layout Padding Container */
+.page-content-padding {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+}
+
+.main-title {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 900;
+    margin: 20px 0;
+    color: #0f172a;
+}
+
+/* 4. QUICK CITY SELECTION STYLING */
+.city-btn-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.city-btn {
+    background-color: white;
+    border: 1px solid #cbd5e1;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.city-btn.active-btn {
+    background-color: #3b82f6;
+    color: white;
+    border-color: #2563eb;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* 6. LOCATION SEARCH BAR & AUTOCOMPLETE DROPDOWN */
+.search-container {
+    max-width: 550px;
+    margin: 0 auto 24px auto;
+}
+
+.search-label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.search-bar-group {
+    display: flex;
+    gap: 8px;
+    position: relative;
+}
+
+.input-autocomplete-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.search-bar-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 25px;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    background: white;
+}
+
+.search-submit-btn {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0 24px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.search-submit-btn:hover { background-color: #2563eb; }
+
+.geo-btn {
+    background-color: #e2e8f0;
+    border: none;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.geo-btn:hover { background-color: #cbd5e1; }
+
+/* Suggestions Autocomplete List Dropdown Menu box */
+.suggestions-dropdown {
+    position: absolute;
+    top: 52px;
+    left: 0;
+    width: 100%;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    z-index: 2000;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.suggestion-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.9rem;
+}
+
+.suggestion-item:last-child { border-bottom: none; }
+.suggestion-item:hover { background-color: #f8fafc; }
+
+.suggestion-station { font-weight: 600; color: #1e293b; max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.suggestion-meta { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
+.suggestion-badge { padding: 4px 10px; border-radius: 6px; color: white; font-weight: 800; font-size: 0.8rem; }
+
+/* 5. TOKEN CARD BOX */
+.token-alert-card {
+    max-width: 550px;
+    margin: 20px auto;
+    background-color: #fef9c3;
+    border: 1px solid #fef08a;
+    padding: 18px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+}
+
+.token-alert-card h3 { color: #854d0e; margin-bottom: 4px; }
+.token-alert-card p { font-size: 0.85rem; margin-bottom: 12px; color: #a16207; }
+.token-input-row { display: flex; gap: 8px; }
+.token-input-row input { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; }
+.token-input-row button { background-color: #ca8a04; color: white; border: none; padding: 0 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+
+/* Card Components General Elements */
+.dashboard-main {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+}
+
+/* 7. CHARACTER / BUDDY BOX DESIGN DISPLAY */
+.buddy-section {
+    background: linear-gradient(145deg, #334155, #1e293b);
+    color: white;
+}
+
+.buddy-wrapper {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+}
+
+.buddy-avatar-side {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Dynamic Umbrella position setup overlay */
+.umbrella {
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    width: 80px;
+    height: 45px;
+    background: #a855f7;
+    border-radius: 45px 45px 0 0;
+    transform: rotate(-10deg);
+    z-index: 2;
+}
+
+.umbrella::after {
+    content: '';
+    position: absolute;
+    bottom: -18px;
+    left: 40px;
+    width: 3px;
+    height: 18px;
+    background: #cbd5e1;
+}
+
+.avatar-emoji {
+    font-size: 5.5rem;
+    line-height: 1;
+    z-index: 1;
+}
+
+/* Framer Motion Alternative Native Bounce animation effect */
+.bounce-animation {
+    animation: motionBounce 2.5s ease-in-out infinite;
+}
+
+@keyframes motionBounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-8px) scale(1.02); }
+}
+
+.buddy-content-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.buddy-greeting { font-size: 1.6rem; font-weight: 800; }
+.buddy-subtext { color: #94a3b8; font-size: 0.95rem; margin-top: -6px; }
+
+.aqicn-link { color: #3b82f6 !important; text-decoration: underline; }
+
+.aqi-status-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #64748b;
+    color: white;
+    padding: 14px 20px;
+    border-radius: 14px;
+    transition: background-color 0.4s;
+}
+
+.banner-title { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; opacity: 0.8; }
+.banner-label-status { font-size: 1.3rem; font-weight: 900; }
+.banner-score-huge { font-size: 2.8rem; font-weight: 900; }
+
+.speech-bubble-tip {
+    background-color: white;
+    color: #334155;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.weather-mini-row { display: flex; gap: 10px; }
+.metric-mini-pill { background-color: rgba(255, 255, 255, 0.12); padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; }
+.trivia-footer { font-size: 0.85rem; color: #94a3b8; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 10px; margin-top: 4px; }
+
+/* 8. AQI DETAILS CARD DISPLAY GAUGE */
+.summary-dashboard-card {
+    background-color: white;
+    color: #1e293b;
+}
+
+.summary-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+}
+
+.location-title { font-size: 1.4rem; font-weight: 800; color: #0f172a; }
+.live-data-badge { background: #fee2e2; color: #ef4444; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.5px; }
+
+.summary-card-body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: center;
+}
+
+@media (max-width: 650px) {
+    .summary-card-body-grid { grid-template-columns: 1fr; }
+}
+
+.gauge-column { display: flex; justify-content: center; align-items: center; }
+.gauge-axis-box { position: relative; width: 200px; }
+.radial-gauge-svg { width: 100%; height: auto; }
+.gauge-arc-base { stroke: #e2e8f0; }
+.gauge-arc-active { stroke: #3b82f6; transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.4s; }
+
+.gauge-center-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+#gauge-display-score { font-size: 3.2rem; font-weight: 900; line-height: 1; color: #0f172a; }
+#gauge-display-label { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 2px; }
+
+.weather-details-side h4 { font-size: 1rem; font-weight: 800; margin-bottom: 10px; color: #475569; }
+.detail-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; }
+.detail-item strong { font-weight: 700; color: #0f172a; }
+
+/* POLLUTANT BARS COMPARATIVE VISUAL FIELDS */
+.breakdown-title { margin-bottom: 16px; font-size: 1.2rem; font-weight: 800; color: #0f172a; }
+.pollutants-bars-container { display: flex; flex-direction: column; gap: 14px; }
+.pollutant-bar-row { display: flex; flex-direction: column; gap: 6px; }
+.bar-info { display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 600; }
+.bar-bg { background-color: #e2e8f0; height: 10px; width: 100%; border-radius: 5px; overflow: hidden; }
+.bar-fill { height: 100%; width: 0%; border-radius: 5px; transition: width 0.8s ease, background-color 0.4s; }
+
+/* 3. STICKY BOTTOM NAVIGATION BAR MENU BAR MENU */
+.bottom-nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: white;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 2000;
+    padding: 0 10px;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex: 1;
+    height: 100%;
+    color: #64748b;
+    transition: all 0.2s;
+    position: relative;
+    max-width: 80px;
+}
+
+.nav-icon {
+    font-size: 1.3rem;
+    margin-bottom: 2px;
+    transition: transform 0.2s;
+}
+
+.nav-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.nav-item:hover .nav-icon {
+    transform: translateY(-2px);
+}
+
+.nav-item.active {
+    color: #3b82f6;
+}
+
+.nav-item.active .nav-icon {
+    transform: scale(1.15);
+}
+
+/* 10. Alert Badge Counter Notification Graphic element Bubble layout */
+.alert-nav-item { position: relative; }
+.alert-badge {
+    position: absolute;
+    top: 6px;
+    right: 14px;
+    background-color: #ef4444;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 900;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px;
+    border: 2px solid white;
+    animation: pulseBadge 2s infinite;
+}
+
+@keyframes pulseBadge {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+/* ==========================================================================
+   HEALTH RECOMMENDATIONS PAGE STYLING (Matches layout from image_7401a9.png)
+   ========================================================================== */
+
+.health-intro-section {
+    text-align: left;
+    margin: 30px 0 20px 0;
+}
+
+.health-main-title {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.health-subtitle {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin-top: 6px;
+    font-weight: 600;
+}
+
+/* 4. PROFILE PILL SELECTION CONTAINER GRAPHICS */
+.profile-form-card {
+    background-color: #eafaf1; /* Light pastel green-blue matching mockup theme */
+    border: 1px solid #d1fae5;
+    padding: 30px;
+    border-radius: 24px;
+    margin-bottom: 24px;
+}
+
+.form-group-section {
+    margin-bottom: 24px;
+}
+
+.section-form-label {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #065f46;
+    margin-bottom: 12px;
+}
+
+.section-form-label .label-note {
+    font-size: 0.85rem;
+    color: #047857;
+    font-weight: 600;
+}
+
+/* Modern Pill Button Checkbox Overrides matching sample UI closely */
+.pill-selection-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.pill-checkbox-label {
+    cursor: pointer;
+    position: relative;
+}
+
+.pill-checkbox-label input[type="checkbox"],
+.pill-checkbox-label input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.pill-custom-box {
+    display: inline-block;
+    padding: 10px 20px;
+    background: white;
+    border: 1px solid #cbd5e1;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #334155;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+}
+
+/* Active Highlight rules engine mapping paths */
+.pill-checkbox-label input:checked + .pill-custom-box {
+    background-color: #3b82f6;
+    color: white;
+    border-color: #2563eb;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    transform: translateY(-1px);
+}
+
+.pill-checkbox-label:hover .pill-custom-box {
+    border-color: #94a3b8;
+    background-color: #f8fafc;
+}
+
+.pill-checkbox-label input:checked:hover .pill-custom-box {
+    background-color: #2563eb;
+    color: white;
+}
+
+/* Dropdown Menu styling wrappers */
+.select-dropdown-wrapper {
+    position: relative;
+    max-width: 450px;
+}
+
+.styled-select-menu {
+    width: 100%;
+    padding: 12px 18px;
+    background: white;
+    border: 1px solid #cbd5e1;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #334155;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+}
+
+.styled-select-menu:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.submit-recommendations-btn {
+    background-color: #10b981;
+    color: white;
+    border: none;
+    width: 100%;
+    max-width: 280px;
+    padding: 14px 24px;
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 800;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    transition: all 0.2s ease;
+    margin-top: 6px;
+}
+
+.submit-recommendations-btn:hover {
+    background-color: #059669;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    transform: translateY(-1px);
+}
+
+/* 8. QUICK HEALTH TIP BANNER LAYOUT */
+.quick-tip-banner-box {
+    background: linear-gradient(135deg, #fef08a, #fde047);
+    border: 1px solid #facc15;
+    border-radius: 16px;
+    padding: 16px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 15px rgba(250, 204, 21, 0.15);
+}
+
+.banner-lightbulb {
+    font-size: 1.6rem;
+    animation: flashLightbulb 3s infinite ease-in-out;
+}
+
+#rotating-tip-text {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #713f12;
+    line-height: 1.5;
+}
+
+@keyframes flashLightbulb {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0px transparent); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 8px #facc15); }
+}
+
+/* 5. PERSONALIZED ADVICE CARD HOVER LAYOUTS */
+.personalized-results-layout {
+    margin-bottom: 28px;
+    animation: fadeInContainer 0.4s ease-out forwards;
+}
+
+.style-hidden {
+    display: none;
+}
+
+.block-section-heading {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 16px;
+}
+
+.advice-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.advice-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    border-left: 6px solid #ef4444; /* Adaptive status color bars */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: transform 0.2s;
+}
+
+.advice-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+}
+
+.card-icon-frame {
+    font-size: 2.2rem;
+    line-height: 1;
+    padding-top: 2px;
+}
+
+.card-text-frame h3 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.card-text-frame p {
+    font-size: 0.95rem;
+    color: #475569;
+    line-height: 1.5;
+    font-weight: 600;
+}
+
+/* 6. GENERAL TIPS GRID */
+.general-tips-card-box {
+    margin-bottom: 28px;
+}
+
+.tips-grid-display-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.static-tip-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #f8fafc;
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+}
+
+.tip-emoji {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.static-tip-item p {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #334155;
+    line-height: 1.4;
+}
+
+/* 7. COLOR GUIDE RESPONSIVE TABLE SCHEMATICS */
+.risk-guide-card-box {
+    margin-bottom: 40px;
+}
+
+.section-mini-description {
+    font-size: 0.95rem;
+    color: #64748b;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.responsive-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.aqi-color-guide-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.aqi-color-guide-table th {
+    background-color: #f1f5f9;
+    color: #475569;
+    font-weight: 800;
+    padding: 14px 16px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.aqi-color-guide-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.aqi-color-guide-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Aesthetic Row Background Colors */
+.row-green { background-color: rgba(34, 197, 94, 0.03); }
+.row-yellow { background-color: rgba(234, 179, 8, 0.03); }
+.row-orange { background-color: rgba(249, 115, 22, 0.03); }
+.row-red { background-color: rgba(239, 68, 68, 0.03); }
+.row-purple { background-color: rgba(168, 85, 247, 0.03); }
+.row-maroon { background-color: rgba(159, 18, 57, 0.03); }
+
+.color-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: white;
+}
+
+.green-dot { background-color: #22c55e; }
+.yellow-dot { background-color: #eab308; color: #713f12; }
+.orange-dot { background-color: #f97316; }
+.red-dot { background-color: #ef4444; }
+.purple-dot { background-color: #a855f7; }
+.maroon-dot { background-color: #9f1239; }
+
+.aqi-range-cell {
+    font-family: monospace;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #475569;
+}
+
+.message-cell {
+    color: #334155;
+}
+
+@keyframes fadeInContainer {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}  
+
+/* Layout Wrappers */
+.learn-dashboard-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+}
+
+.learn-main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+}
+
+/* Level Progress Module Layout */
+.level-progress-banner {
+    background: linear-gradient(135deg, #a83294 0%, #d946ef 100%);
+    border-radius: 16px;
+    padding: 24px;
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.xp-progress-bar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.xp-progress-bar {
+    flex: 1;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.xp-progress-fill {
+    height: 100%;
+    background-color: #ffffff;
+    border-radius: 6px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stats-mini-flex {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.stat-bubble {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+/* Fluid Responsive Video Container */
+.featured-video-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f1f5f9;
+}
+
+.featured-video-card h2 {
+    font-size: 1.35rem;
+    color: #1e293b;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.video-embed-responsive {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* Perfect aspect ratio standard aspect-ratio 16:9 */
+    background-color: #0f172a;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.video-embed-responsive iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.video-meta-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    gap: 24px;
+}
+
+.video-description {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+    flex: 1;
+}
+
+.claimed-status-btn {
+    background-color: #10b981;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: default;
+    white-space: nowrap;
+}
+
+/* Tab Structure & Card Grid Layouts */
+.tabs-header-nav {
+    display: flex;
+    gap: 12px;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 24px;
+}
+
+.tab-toggle-btn {
+    background: none;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    color: #64748b;
+    cursor: pointer;
+    font-weight: 500;
+    position: relative;
+    bottom: -2px;
+}
+
+.tab-toggle-btn.active {
+    color: #3b82f6;
+    border-bottom: 2px solid #3b82f6;
+    font-weight: 600;
+}
+
+.quiz-grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.quiz-interactive-card {
+    background-color: #ffffff;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 180px;
+    position: relative;
+}
+
+.quiz-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background-color: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.quiz-badge.difficulty-easy { background-color: #f0fdf4; color: #16a34a; }
+.quiz-badge.difficulty-medium { background-color: #fff7ed; color: #ea580c; }
+
+.action-start-quiz-btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #3b82f6;
+    background-color: #ffffff;
+    color: #3b82f6;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-start-quiz-btn:hover {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.quiz-interactive-card.completed {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.quiz-interactive-card.completed .action-start-quiz-btn {
+    background-color: #e2e8f0;
+    color: #94a3b8;
+    border-color: #cbd5e1;
+}
+
+
+/* ==========================================================================
+   FORECAST PAGE SPECIFIC DESIGN STYLES
+   ========================================================================== */
+
+.forecast-main {
+    max-width: 800px; /* Aligns perfectly on both desktop and mobile views */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Current Weather Hero Block */
+.current-weather-hero {
+    background: linear-gradient(180deg, #3b82f6, #1d4ed8); /* Striking sky blue gradient */
+    color: white;
+    text-align: center;
+    padding: 35px 20px;
+    border: none;
+}
+
+.current-weather-hero h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.hero-temp-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.hero-temperature {
+    font-size: 3.5rem;
+    font-weight: 800;
+}
+
+.hero-condition-icon {
+    font-size: 3.5rem;
+}
+
+.hero-status-text {
+    margin: 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Hourly Forecast Horizontal Scroll Slider */
+.hourly-slider-container {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto; /* Activates smooth finger swipe/scroll on horizontal axes */
+    padding: 10px 5px 15px 5px;
+    scroll-behavior: smooth;
+}
+
+/* Hide default ugly desktop scrollbars while maintaining functionality */
+.hourly-slider-container::-webkit-scrollbar {
+    height: 6px;
+}
+.hourly-slider-container::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 10px;
+}
+
+.hourly-time-box {
+    flex: 0 0 75px; /* Ensures boxes don't compress smaller than 75px width */
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 6px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.hourly-time-box.current-hour {
+    background-color: #eff6ff;
+    border-color: #3b82f6;
+}
+
+.hourly-time-box .time {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.hourly-time-box .temp {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* 7-Day Extended Weekly Forecast Layout */
+.weekly-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.weekly-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background-color: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.weekly-day-label {
+    flex: 1;
+    font-weight: 600;
+    color: #334155;
+}
+
+.weekly-icon-wrapper {
+    flex: 1;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+.weekly-temp-range {
+    flex: 1;
+    text-align: right;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.weekly-temp-range .min-t {
+    color: #94a3b8;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+.loading-placeholder {
+    color: #64748b;
+    text-align: center;
+    padding: 20px 0;
+    font-style: italic;
+}  
+
+/* ==========================================================================
+   HEADER ROW ALIGNMENT FIXES
+   ========================================================================== */
+
+.main-header {
+    background-color: #0b1528; /* Dark elegant sky blue base */
+    padding: 16px 24px;
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Horizontal alignment wrapper */
+.header-top {
+    display: flex;
+    justify-content: space-between; /* Pushes logo left and clock right */
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Left alignment group */
+.logo-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.header-logo {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+}
+
+.brand-sub {
+    font-size: 0.8rem;
+    color: #94a3b8; /* Muted gray text color for description */
+    margin-top: 2px;
+}
+
+/* Right alignment clock group */
+.clock-group {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.time-string {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ffffff;
+    font-variant-numeric: tabular-nums; /* Prevents text shifting as numbers tick */
+}
+
+.date-string {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+/* Ensure content flow doesn't tuck underneath sticky components */
+.forecast-main {
+    margin-top: 20px;
+}
+

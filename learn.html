@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirCare — Learn & Earn</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-top">
+            <div class="logo-group">
+    <img src="logo.png" alt="AirCare Logo" style="height: 45px; width: auto; border-radius: 8px;">
+    <div>
+        <h1 class="brand-name">AirCare</h1>
+        <span class="brand-sub">Learn & Earn Dashboard</span>
+    </div>
+    </div>
+                    
+                    
+                </div>
+            </div>
+            <div class="clock-group">
+                <div id="live-time" class="time-string">--:--:-- PM</div>
+                <div id="live-date" class="date-string">--/--/----</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="learn-dashboard-container">
+        <main class="learn-main-content">
+            
+            <section class="level-progress-banner">
+                <div class="level-badge-container" style="display: flex; align-items: center; gap: 16px;">
+                    <span class="level-icon" style="font-size: 2.5rem;">🏅</span>
+                    <div class="level-details">
+                        <h3 style="font-size: 1.4rem; font-weight: 800;">Level 2 — Air Guard</h3>
+                        <p class="xp-text" style="opacity: 0.9; font-size: 0.9rem;">Progress to next level</p>
+                    </div>
+                </div>
+                <div class="xp-progress-bar-wrapper">
+                    <div class="xp-progress-bar">
+                        <div class="xp-progress-fill" style="width: 48%;"></div>
+                    </div>
+                    <span class="xp-numeric-counter" style="font-weight: 800; font-size: 0.95rem;">240 / 500 XP</span>
+                </div>
+                <div class="stats-mini-flex">
+                    <div class="stat-bubble"><span class="stat-emoji">⭐</span> Total Points: <strong>820</strong></div>
+                    <div class="stat-bubble"><span class="stat-emoji">🔥</span> Daily Streak: <strong>3 Days</strong></div>
+                </div>
+            </section>
+
+            <section class="featured-video-card">
+                <h2><span class="video-icon">🎥</span> Featured Video: What is Air Pollution?</h2>
+                <div class="video-embed-responsive">
+                    <iframe 
+                        src="https://www.youtube.com/embed/t7Q7y_xjR5E" 
+                        title="Air Pollution | Video for Kids | Causes, Effects & Solution" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="video-meta-footer">
+                    <p class="video-description">A concise visual deep-dive explaining the primary baseline triggers, environmental visibility hazards, and global health impacts of systemic air pollution.</p>
+                    <button id="claim-xp-btn" class="claimed-status-btn" disabled>✓ Watched & Claimed</button>
+                </div>
+            </section>
+
+            <section class="gamification-tabs-container">
+                <div class="tabs-header-nav">
+                    <button class="tab-toggle-btn active" onclick="switchGamificationTab('quizzes')">🧠 Quizzes</button>
+                    <button class="tab-toggle-btn" onclick="switchGamificationTab('challenges')">🌍 Eco Challenges</button>
+                    <button class="tab-toggle-btn" onclick="switchGamificationTab('badges')">🏅 Badges</button>
+                </div>
+
+                <div id="quizzes-tab-panel" class="tab-content-panel active">
+                    <div class="quiz-grid-layout">
+                        
+                        <div class="quiz-interactive-card">
+                            <span class="quiz-badge difficulty-easy">+100 XP</span>
+                            <div class="quiz-card-body" style="margin-bottom: 16px;">
+                                <h3 style="font-size: 1.15rem; margin-bottom: 6px; font-weight: 800;">AQI Basics Quiz</h3>
+                                <p style="font-size: 0.9rem; color: #64748b; line-height: 1.4;">Test your standard foundational core understanding of atmospheric index calculations.</p>
+                            </div>
+                            <button class="action-start-quiz-btn" onclick="startQuiz('aqi-basics')">Start Quiz</button>
+                        </div>
+
+                        <div class="quiz-interactive-card completed">
+                            <span class="quiz-badge difficulty-medium">+150 XP</span>
+                            <div class="quiz-card-body" style="margin-bottom: 16px;">
+                                <h3 style="font-size: 1.15rem; margin-bottom: 6px; font-weight: 800;">Know Your Pollutants</h3>
+                                <p style="font-size: 0.9rem; color: #64748b; line-height: 1.4;">Deep dive questions surrounding microscopic elements like particulate matters (PM₂.₅).</p>
+                            </div>
+                            <button class="action-start-quiz-btn" disabled>Completed ✓</button>
+                        </div>
+
+                        <div class="quiz-interactive-card">
+                            <span class="quiz-badge difficulty-easy">+100 XP</span>
+                            <div class="quiz-card-body" style="margin-bottom: 16px;">
+                                <h3 style="font-size: 1.15rem; margin-bottom: 6px; font-weight: 800;">Staying Safe</h3>
+                                <p style="font-size: 0.9rem; color: #64748b; line-height: 1.4;">Practical emergency safety mitigation scenarios based on real-time pollution values.</p>
+                            </div>
+                            <button class="action-start-quiz-btn" onclick="startQuiz('staying-safe')">Start Quiz</button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="challenges-tab-panel" class="tab-content-panel" style="display: none; padding: 20px; background: white; border-radius: 12px; border: 1px solid #e2e8f0;">
+                    <h3 style="font-weight: 800; color: #1e293b;">Eco Challenges</h3>
+                    <p style="color: #64748b; margin-top: 6px; font-size: 0.95rem;">Complete localized green environmental objectives to earn bonus items.</p>
+                </div>
+                
+                <div id="badges-tab-panel" class="tab-content-panel" style="display: none; padding: 20px; background: white; border-radius: 12px; border: 1px solid #e2e8f0;">
+                    <h3 style="font-weight: 800; color: #1e293b;">Your Achievements</h3>
+                    <p style="color: #64748b; margin-top: 6px; font-size: 0.95rem;">Review your locked and unlocked performance badges.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <nav class="bottom-nav-bar">
+        <div class="nav-item" onclick="window.location.href='../index.html'">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='recommendations.html'">
+            <span class="nav-icon">🏥</span>
+            <span class="nav-label">Health</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='forecast.html'">
+            <span class="nav-icon">🔮</span>
+            <span class="nav-label">Forecast</span>
+        </div>
+        <div class="nav-item active" onclick="window.location.href='learn.html'">
+            <span class="nav-icon">🧠</span>
+            <span class="nav-label">Learn</span>
+        </div>
+        
+    </nav>
+
+    <script src="../app.js"></script>
+</body>
+</html>

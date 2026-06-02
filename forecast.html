@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirCare — Forecast</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-top">
+            <div class="logo-group">
+                <img src="logo.png" alt="AirCare Logo" class="header-logo">
+                <div class="logo-text">
+                    <span class="brand-name">AirCare</span>
+                    <span class="brand-sub">Global Air Quality Monitor</span>
+                </div>
+            </div>
+            <div class="clock-group">
+                <div id="live-time" class="time-string">00:00:00 AM</div>
+                <div id="live-date" class="date-string">2026. 05. 30.</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-content-padding forecast-main">
+        
+        <section class="card current-weather-hero">
+            <h2 id="forecast-location-title">Detecting Location...</h2>
+            <div class="hero-temp-block">
+                <span class="hero-temperature" id="hero-temp">--°C</span>
+                <span class="hero-condition-icon" id="hero-icon">☁️</span>
+            </div>
+            <p class="hero-status-text" id="hero-condition">Loading local meteorological conditions...</p>
+        </section>
+
+        <section class="card hourly-forecast-card">
+            <h3>⏰ Hourly Forecast (Next 24 Hours)</h3>
+            <div class="hourly-slider-container" id="hourly-slider">
+                <p class="loading-placeholder">Fetching hourly trendlines...</p>
+            </div>
+        </section>
+
+        <section class="card weekly-forecast-card">
+            <h3>📅 7-Day Extended Forecast</h3>
+            <div class="weekly-list-container" id="weekly-list">
+                <p class="loading-placeholder">Compiling weekly weather metrics...</p>
+            </div>
+        </section>
+
+    </main>
+
+    <nav class="bottom-nav-bar">
+        <div class="nav-item" onclick="window.location.href='index.html'">
+            <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='health.html'">
+            <span class="nav-icon">🏥</span><span class="nav-label">Health</span>
+        </div>
+        <div class="nav-item active" onclick="window.location.href='forecast.html'">
+            <span class="nav-icon">🔮</span><span class="nav-label">Forecast</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='learn.html'">
+            <span class="nav-icon">🧠</span><span class="nav-label">Learn</span>
+        </div>
+        
+    </nav>
+
+    <script>
+        const weatherCodeMap = {
+            0: { text: "Clear Sky", icon: "☀️" },
+            1: { text: "Mainly Clear", icon: "🌤️" },
+            2: { text: "Partly Cloudy", icon: "⛅" },
+            3: { text: "Overcast", icon: "☁️" },
+            45: { text: "Foggy", icon: "🌫️" },
+            61: { text: "Slight Rain", icon: "🌧️" },
+            63: { text: "Moderate Rain", icon: "🌧️" },
+            95: { text: "Thunderstorm", icon: "⛈️" }
+        };
+
+        function getWeatherCondition(code) {
+            return weatherCodeMap[code] || { text: "Partly Cloudy", icon: "⛅" };
+        }
+
+        function runClock() {
+            const clockElement = document.getElementById("live-time");
+            if (!clockElement) return;
+            
+            setInterval(() => {
+                const now = new Date();
+                clockElement.textContent = now.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                });
+            }, 1000);
+        }
+
+        function fetchLocalForecast() {
+            const locationHeading = document.getElementById("forecast-location-title");
+            
+            // UPDATED: Dynamically fetch saved location name or set fallbacks if none exists
+            const savedLocation = localStorage.getItem("selectedLocation");
+            if (savedLocation) {
+                locationHeading.textContent = `${savedLocation} Forecast`;
+            } else {
+                locationHeading.textContent = "📍 Live Local Forecast";
+            }
+            
+            // Set up fallback data immediately so the screen is NEVER blank
+            useBackupData();
+
+            // Try to get live coordinates if allowed
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude.toFixed(4);
+                        const lon = position.coords.longitude.toFixed(4);
+                        
+                        // If user hasn't explicitly searched for a city, keep the live GPS tag
+                        if (!savedLocation) {
+                            locationHeading.textContent = `📍 Live Local Forecast`;
+                        }
+                        pullWeatherData(lat, lon);
+                    },
+                    (error) => {
+                        console.log("Location permission denied or timed out. Keeping smart simulation.");
+                    }
+                );
+            }
+        }
+
+        async function pullWeatherData(lat, lon) {
+            const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`;
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) return;
+                const data = await response.json();
+                renderCurrentHeroCard(data.current);
+                renderHourlySlider(data.hourly);
+                renderWeeklyForecast(data.daily);
+            } catch (err) {
+                console.log("API Fetch failed. Keeping simulation values.");
+            }
+        }
+
+        function renderCurrentHeroCard(currentData) {
+            document.getElementById("hero-temp").textContent = `${Math.round(currentData.temperature_2m)}°C`;
+            const condition = getWeatherCondition(currentData.weather_code);
+            document.getElementById("hero-icon").textContent = condition.icon;
+            document.getElementById("hero-condition").textContent = condition.text;
+        }
+
+        function renderHourlySlider(hourlyData) {
+            const sliderContainer = document.getElementById("hourly-slider");
+            sliderContainer.innerHTML = ""; 
+            const currentHourIndex = new Date().getHours();
+            
+            for (let i = currentHourIndex; i < currentHourIndex + 24; i++) {
+                if (!hourlyData.time[i]) break;
+                const timeRaw = new Date(hourlyData.time[i]);
+                let formattedHour = timeRaw.getHours();
+                const ampm = formattedHour >= 12 ? 'PM' : 'AM';
+                formattedHour = formattedHour % 12 || 12; 
+                const displayTime = i === currentHourIndex ? "Now" : `${formattedHour} ${ampm}`;
+                const tempVal = Math.round(hourlyData.temperature_2m[i]);
+                const condition = getWeatherCondition(hourlyData.weather_code[i]);
+
+                const hourBox = document.createElement("div");
+                hourBox.className = `hourly-time-box ${i === currentHourIndex ? 'current-hour' : ''}`;
+                hourBox.innerHTML = `
+                    <span class="time">${displayTime}</span>
+                    <span class="icon">${condition.icon}</span>
+                    <span class="temp">${tempVal}°C</span>
+                `;
+                sliderContainer.appendChild(hourBox);
+            }
+        }
+
+        function renderWeeklyForecast(dailyData) {
+            const weeklyContainer = document.getElementById("weekly-list");
+            weeklyContainer.innerHTML = ""; 
+            const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+            dailyData.time.forEach((timeString, index) => {
+                const dateObj = new Date(timeString);
+                let dayLabel = daysOfWeek[dateObj.getDay()];
+                if (index === 0) dayLabel = "Today";
+
+                const maxTemp = Math.round(dailyData.temperature_2m_max[index]);
+                const minTemp = Math.round(dailyData.temperature_2m_min[index]);
+                const condition = getWeatherCondition(dailyData.weather_code[index]);
+
+                const rowElement = document.createElement("div");
+                rowElement.className = "weekly-row";
+                rowElement.innerHTML = `
+                    <div class="weekly-day-label">${dayLabel}</div>
+                    <div class="weekly-icon-wrapper" title="${condition.text}">${condition.icon}</div>
+                    <div class="weekly-temp-range">
+                        <span class="max-t">${maxTemp}°C</span>
+                        <span class="min-t">${minTemp}°C</span>
+                    </div>
+                `;
+                weeklyContainer.appendChild(rowElement);
+            });
+        }
+
+        function useBackupData() {
+            // UPDATED: Retain our dynamic header value instead of rewriting it to "Forecast Station"
+            const locationHeading = document.getElementById("forecast-location-title");
+            const savedLocation = localStorage.getItem("selectedLocation");
+            if (!savedLocation) {
+                locationHeading.textContent = "📍 Forecast Station";
+            }
+
+            renderCurrentHeroCard({ temperature_2m: 24, weather_code: 1 });
+
+            const mockHourly = { time: [], temperature_2m: [], weather_code: [] };
+            const baseDate = new Date();
+            for (let i = 0; i < 48; i++) {
+                const futureDate = new Date(baseDate);
+                futureDate.setHours(baseDate.getHours() + i);
+                mockHourly.time.push(futureDate.toISOString());
+                const hour = futureDate.getHours();
+                const dynamicTemp = 22 + Math.sin((hour - 6) * Math.PI / 12) * 4;
+                mockHourly.temperature_2m.push(dynamicTemp);
+                mockHourly.weather_code.push(hour > 18 || hour < 6 ? 0 : 2);
+            }
+            renderHourlySlider(mockHourly);
+
+            const mockDaily = { time: [], temperature_2m_max: [], temperature_2m_min: [], weather_code: [] };
+            for (let i = 0; i < 7; i++) {
+                const d = new Date();
+                d.setDate(d.getDate() + i);
+                mockDaily.time.push(d.toISOString().split('T')[0]);
+                mockDaily.temperature_2m_max.push(26 + (i % 2));
+                mockDaily.temperature_2m_min.push(16 - (i % 3));
+                mockDaily.weather_code.push(i === 2 ? 61 : (i % 3));
+            }
+            renderWeeklyForecast(mockDaily);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            runClock();
+            fetchLocalForecast();
+        });
+    </script>
+</body>
+</html>
