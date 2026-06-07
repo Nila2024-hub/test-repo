@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirCare - Health Recommendations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-top">
+            <div class="logo-group">
+                <img src="logo.png" onerror="this.src='https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/assets/logo.png'" alt="AirCare Logo" class="header-logo">
+                <div>
+                    <span class="brand-name">AirCare</span>
+                    <span class="brand-sub">Global Air Quality Monitor</span>
+                </div>
+            </div>
+            <div class="clock-group">
+                <div id="live-time" class="time-string">00:00:00 AM</div>
+                <div id="live-date" class="date-string">Loading Date...</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-content-padding">
+        
+        <div class="health-intro-section">
+            <h1 class="health-main-title">
+                <span class="title-icon">💚</span> Health Recommendations
+            </h1>
+            <p class="health-subtitle">Get personalized air quality health advice based on your profile</p>
+        </div>
+
+        <section class="card profile-form-card">
+            <form id="health-profile-form" onsubmit="generateRecommendations(event)">
+                
+                <div class="form-group-section">
+                    <label class="section-form-label">Age Group</label>
+                    <div class="pill-selection-grid">
+                        <label class="pill-checkbox-label">
+                            <input type="radio" name="age-group" value="child" required>
+                            <span class="pill-custom-box">👶 Child (under 12)</span>
+                        </label>
+                        <label class="pill-checkbox-label">
+                            <input type="radio" name="age-group" value="teen">
+                            <span class="pill-custom-box">🧒 Teen (12–17)</span>
+                        </label>
+                        <label class="pill-checkbox-label">
+                            <input type="radio" name="age-group" value="adult" checked>
+                            <span class="pill-custom-box">👨 Adult (18–64)</span>
+                        </label>
+                        <label class="pill-checkbox-label">
+                            <input type="radio" name="age-group" value="senior">
+                            <span class="pill-custom-box">👴 Senior (65+)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group-section">
+                    <label class="section-form-label">Health Conditions <span class="label-note">(Select all that apply)</span></label>
+                    <div class="pill-selection-grid">
+                        <label class="pill-checkbox-label">
+                            <input type="checkbox" name="conditions" value="asthma">
+                            <span class="pill-custom-box">💨 Asthma</span>
+                        </label>
+                        <label class="pill-checkbox-label">
+                            <input type="checkbox" name="conditions" value="heart">
+                            <span class="pill-custom-box">❤️ Heart Disease</span>
+                        </label>
+                        <label class="pill-checkbox-label">
+                            <input type="checkbox" name="conditions" value="diabetes">
+                            <span class="pill-custom-box">🩸 Diabetes</span>
+                        </label>
+                        <label class="pill-checkbox-label">
+                            <input type="checkbox" name="conditions" value="lung">
+                            <span class="pill-custom-box">🫁 Lung Disease / COPD</span>
+                        </label>
+                        <label class="pill-checkbox-label">
+                            <input type="checkbox" name="conditions" value="allergies">
+                            <span class="pill-custom-box">🌿 Allergies / Hay Fever</span>
+                        </label>
+                        <label class="pill-checkbox-label">
+                            <input type="checkbox" name="conditions" value="pregnancy">
+                            <span class="pill-custom-box">🤰 Pregnancy</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group-section">
+                    <label for="activity-level" class="section-form-label">Occupation / Activity Level</label>
+                    <div class="select-dropdown-wrapper">
+                        <select id="activity-level" name="activity-level" class="styled-select-menu">
+                            <option value="office">🏢 Office Worker (mostly indoors)</option>
+                            <option value="outdoor">👷 Outdoor Worker</option>
+                            <option value="student">🎒 Student</option>
+                            <option value="athlete">🏃 Athlete / Frequent Exerciser</option>
+                            <option value="elderly">🏡 Elderly / Low Activity</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-recommendations-btn">Get My Recommendations</button>
+            </form>
+        </section>
+
+        <div id="rotating-tip-banner" class="quick-tip-banner-box">
+            <span class="banner-lightbulb">💡</span>
+            <p id="rotating-tip-text">Today's Tip: Morning hours usually have better air quality. Exercise before 8AM!</p>
+        </div>
+
+        <section id="personalized-output-section" class="personalized-results-layout style-hidden">
+            <h2 class="block-section-heading">✨ Your Personalized Safety Guidance</h2>
+            <div id="cards-dynamic-rendering-target" class="advice-cards-grid">
+                </div>
+        </section>
+
+        <section class="card general-tips-card-box">
+            <h2 class="block-section-heading">🏡 Easy Safety Tips for Everyone</h2>
+            <div class="tips-grid-display-box">
+                <div class="static-tip-item"><span class="tip-emoji">🏠</span><p>Stay indoors and keep windows closed when AQI is high</p></div>
+                <div class="static-tip-item"><span class="tip-emoji">😷</span><p>Wear a certified N95 mask outdoors when AQI > 150</p></div>
+                <div class="static-tip-item"><span class="tip-emoji">🌿</span><p>Use indoor air purifiers in your home</p></div>
+                <div class="static-tip-item"><span class="tip-emoji">💧</span><p>Drink more water to help flush pollutants</p></div>
+                <div class="static-tip-item"><span class="tip-emoji">🚗</span><p>Avoid busy roads and traffic areas during peak hours</p></div>
+                <div class="static-tip-item"><span class="tip-emoji">🌲</span><p>Choose parks and green spaces for outdoor activities</p></div>
+                <div class="static-tip-item"><span class="tip-emoji">📱</span><p>Check AirCare daily before going outside</p></div>
+            </div>
+        </section>
+
+        <section class="card risk-guide-card-box">
+            <h2 class="block-section-heading">📊 Health Risk Level Color Guide</h2>
+            <p class="section-mini-description">A visual guide showing what each AQI level means for your daily health status:</p>
+            <div class="responsive-table-wrapper">
+                <table class="aqi-color-guide-table">
+                    <thead>
+                        <tr>
+                            <th>Color</th>
+                            <th>AQI Range</th>
+                            <th>Health Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="row-green">
+                            <td><span class="color-badge green-dot">🟢 Green</span></td>
+                            <td class="aqi-range-cell">0–50</td>
+                            <td class="message-cell">Good — No health risk</td>
+                        </tr>
+                        <tr class="row-yellow">
+                            <td><span class="color-badge yellow-dot">🟡 Yellow</span></td>
+                            <td class="aqi-range-cell">51–100</td>
+                            <td class="message-cell">Moderate — Sensitive groups be careful</td>
+                        </tr>
+                        <tr class="row-orange">
+                            <td><span class="color-badge orange-dot">🟠 Orange</span></td>
+                            <td class="aqi-range-cell">101–150</td>
+                            <td class="message-cell">Unhealthy for sensitive groups</td>
+                        </tr>
+                        <tr class="row-red">
+                            <td><span class="color-badge red-dot">🔴 Red</span></td>
+                            <td class="aqi-range-cell">151–200</td>
+                            <td class="message-cell">Unhealthy — Reduce outdoor activity</td>
+                        </tr>
+                        <tr class="row-purple">
+                            <td><span class="color-badge purple-dot">🟣 Purple</span></td>
+                            <td class="aqi-range-cell">201–300</td>
+                            <td class="message-cell">Very Unhealthy — Stay indoors</td>
+                        </tr>
+                        <tr class="row-maroon">
+                            <td><span class="color-badge maroon-dot">🟤 Maroon</span></td>
+                            <td class="aqi-range-cell">300+</td>
+                            <td class="message-cell">Hazardous — Emergency conditions</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+    <nav class="bottom-nav-bar">
+        <div class="nav-item" onclick="window.location.href='../index.html'">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-item active" onclick="window.location.href='health.html'">
+            <span class="nav-icon">🏥</span>
+            <span class="nav-label">Health</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='forecast.html'">
+            <span class="nav-icon">🔮</span>
+            <span class="nav-label">Forecast</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='learn.html'">
+            <span class="nav-icon">🧠</span>
+            <span class="nav-label">Learn</span>
+        </div>
+        
+    </nav>
+    
+    <script src="app.js"></script>
+</body>
+</html>

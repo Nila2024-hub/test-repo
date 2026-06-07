@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirCare - Premium Global Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="splash-screen" class="splash-overlay">
+        <div class="splash-content">
+            <img src="logo.png" alt="AirCare Logo" class="splash-logo">
+            <h1 class="splash-title">AirCare</h1>
+            <p class="splash-subtitle">Breathe Clean, Live Smart</p>
+            <div class="splash-spinner"></div>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <div class="header-top">
+            <div class="logo-group">
+                <img src="logo.png" alt="AirCare Logo" class="header-logo">
+                <div class="logo-text">
+                    <span class="brand-name">AirCare</span>
+                    <span class="brand-sub">Global Air Quality Monitor</span>
+                </div>
+            </div>
+            <div class="clock-group">
+                <div id="live-time" class="time-string">00:00:00 AM</div>
+                <div id="live-date" class="date-string">2026. 05. 30.</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-content-padding">
+        <h1 class="main-title">Global Air Pollution: Real-time Air Quality Index (AQI)</h1>
+
+        <div class="city-btn-container">
+            <button class="city-btn" id="btn-New-York" onclick="handleCitySelect('New York')">New York</button>
+            <button class="city-btn" id="btn-London" onclick="handleCitySelect('London')">London</button>
+            <button class="city-btn" id="btn-Tokyo" onclick="handleCitySelect('Tokyo')">Tokyo</button>
+            <button class="city-btn" id="btn-Delhi" onclick="handleCitySelect('Delhi')">Delhi</button>
+            <button class="city-btn" id="btn-Beijing" onclick="handleCitySelect('Beijing')">Beijing</button>
+            <button class="city-btn" id="btn-Los-Angeles" onclick="handleCitySelect('Los Angeles')">Los Angeles</button>
+        </div>
+
+        <div class="search-container">
+            <label class="search-label">📍 Find nearest city</label>
+            <div class="search-bar-group">
+                <div class="input-autocomplete-wrapper">
+                    <input type="text" id="city-input" placeholder="Enter city name (e.g., Seoul, Paris)..." oninput="handleSearchAutofill(this.value)">
+                    <div id="search-suggestions" class="suggestions-dropdown" style="display: none;"></div>
+                </div>
+                <button class="search-submit-btn" onclick="handleSearchSubmit()">Search</button>
+                <button class="geo-btn" onclick="handleGPSLocation()" title="Use My Location">📍</button>
+            </div>
+        </div>
+
+        <div id="token-box" class="token-alert-card">
+            <h3>🔑 API Token Required</h3>
+            <p>For live data, please enter your free API token from <a href="https://aqicn.org/data-platform/token/" target="_blank">aqicn.org</a></p>
+            <div class="token-input-row">
+                <input type="text" id="token-input" placeholder="Enter your WAQI API token here">
+                <button type="button" onclick="handleSaveToken()">Save Token</button>
+            </div>
+        </div>
+
+        <main class="dashboard-main" id="dashboard-content" style="display: none;">
+            
+            <section class="card buddy-section">
+                <div id="weather-bg-effects" class="weather-bg-container"></div>
+
+                <div class="buddy-wrapper">
+                    <div class="buddy-avatar-side">
+                        <div id="umbrella-element" class="umbrella" style="display: none;"></div>
+                        <div class="avatar-emoji bounce-animation" id="character-avatar">😊</div>
+                    </div>
+                    
+                    <div class="buddy-content-side">
+                        <h2 class="buddy-greeting">Hi! I'm AirCare Buddy! 👋</h2>
+                        <p class="buddy-subtext">Let me tell you about today's air quality!</p>
+                        
+                        <div id="aqi-banner-box" class="aqi-status-banner">
+                            <div class="banner-left">
+                                <span class="banner-title">Air Quality Index</span>
+                                <span id="banner-status-text" class="banner-label-status">Good</span>
+                            </div>
+                            <span id="banner-aqi-val" class="banner-score-huge">--</span>
+                        </div>
+
+                        <div class="speech-bubble-tip">
+                            <span id="status-desc">Loading localized recommendation matrix report parameters...</span>
+                        </div>
+
+                        <div class="weather-mini-row">
+                            <div class="metric-mini-pill">🌡️ <span id="pill-temp">--°C</span></div>
+                            <div class="metric-mini-pill">💧 <span id="pill-humidity">--%</span></div>
+                        </div>
+
+                        <div class="trivia-footer">
+                            💡 <strong>Did you know?</strong> <span id="environmental-fact">PM2.5 particles are 30x smaller than a human hair!</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="gauge-card-box" class="card summary-dashboard-card">
+                <div class="summary-card-header">
+                    <div>
+                        <h3 id="gauge-location-name" class="location-title">Selected Location</h3>
+                        <p id="station-update-timestamp" style="font-size: 0.8rem; opacity: 0.8; margin-top: 2px;">Last updated: --</p>
+                    </div>
+                    <span class="live-data-badge">LIVE DATA</span>
+                </div>
+
+                <div class="summary-card-body-grid">
+                    <div class="gauge-column">
+                        <div class="gauge-axis-box">
+                            <svg class="radial-gauge-svg" viewBox="0 0 100 50">
+                                <path class="gauge-arc-base" d="M 10,50 A 40,40 0 0,1 90,50" fill="none" stroke-width="8" stroke-linecap="round" />
+                                <path id="gauge-arc-fill" class="gauge-arc-active" d="M 10,50 A 40,40 0 0,1 90,50" fill="none" stroke-width="8" stroke-linecap="round" stroke-dasharray="125.6" stroke-dashoffset="125.6" />
+                            </svg>
+                            <div class="gauge-center-text">
+                                <h2 id="gauge-display-score">--</h2>
+                                <p id="gauge-display-label">--</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="weather-details-side">
+                        <h4>Weather / Atmospheric Metrics</h4>
+                        <div class="detail-item">
+                            <span>🌡️ Temperature</span>
+                            <strong id="table-temp">--</strong>
+                        </div>
+                        <div class="detail-item">
+                            <span>💧 Humidity</span>
+                            <strong id="table-humidity">--</strong>
+                        </div>
+                        <div class="detail-item">
+                            <span>🎯 Barometric Pressure</span>
+                            <strong id="table-pressure">--</strong>
+                        </div>
+                        <div class="detail-item">
+                            <span>💨 Wind Speed</span>
+                            <strong id="table-wind">--</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card breakdown-table-card">
+                <h3 class="breakdown-title">Detailed Pollutant Elements Breakdown</h3>
+                <div class="pollutants-bars-container">
+                    <div class="pollutant-bar-row">
+                        <div class="bar-info"><span>💨 PM<sub>2.5</sub> (Fine Particles)</span><strong id="bar-val-pm25">--</strong></div>
+                        <div class="bar-bg"><div id="bar-fill-pm25" class="bar-fill" style="width: 0%"></div></div>
+                    </div>
+                    <div class="pollutant-bar-row">
+                        <div class="bar-info"><span>💨 PM<sub>10</sub> (Coarse Particles)</span><strong id="bar-val-pm10">--</strong></div>
+                        <div class="bar-bg"><div id="bar-fill-pm10" class="bar-fill" style="width: 0%"></div></div>
+                    </div>
+                    <div class="pollutant-bar-row">
+                        <div class="bar-info"><span>🟤 NO<sub>2</sub> (Nitrogen Dioxide)</span><strong id="bar-val-no2">--</strong></div>
+                        <div class="bar-bg"><div id="bar-fill-no2" class="bar-fill" style="width: 0%"></div></div>
+                    </div>
+                    <div class="pollutant-bar-row">
+                        <div class="bar-info"><span>🔵 O<sub>3</sub> (Ozone)</span><strong id="bar-val-o3">--</strong></div>
+                        <div class="bar-bg"><div id="bar-fill-o3" class="bar-fill" style="width: 0%"></div></div>
+                    </div>
+                    <div class="pollutant-bar-row">
+                        <div class="bar-info"><span>⚫ CO (Carbon Monoxide)</span><strong id="bar-val-co">--</strong></div>
+                        <div class="bar-bg"><div id="bar-fill-co" class="bar-fill" style="width: 0%"></div></div>
+                    </div>
+                    <div class="pollutant-bar-row">
+                        <div class="bar-info"><span>🟡 SO<sub>2</sub> (Sulfur Dioxide)</span><strong id="bar-val-so2">--</strong></div>
+                        <div class="bar-bg"><div id="bar-fill-so2" class="bar-fill" style="width: 0%"></div></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div> <nav class="bottom-nav-bar">
+        <div class="nav-item active" onclick="window.location.href='index.html'">
+            <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='health.html'">
+            <span class="nav-icon">🏥</span><span class="nav-label">Health</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='forecast.html'">
+            <span class="nav-icon">🔮</span><span class="nav-label">Forecast</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='learn.html'">
+            <span class="nav-icon">🧠</span><span class="nav-label">Learn</span>
+        </div>
+    </nav>
+
+    <script src="app.js"></script>
+</body>
+</html>
