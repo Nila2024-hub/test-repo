@@ -1,0 +1,18 @@
+# A list of raw dictionaries representing user data
+raw_data = [
+    {"name": "Alice", "score": 85, "active": True},
+    {"name": "Bob", "score": 42, "active": False},
+    {"name": "Charlie", "score": 95, "active": True},
+    {"name": "David", "score": 60, "active": True}
+]
+
+# 1. Filtering & Transformation: Extract names of active users with a high score
+# This is a high-utility 'list comprehension' replacing heavy loops
+top_performers = [user["name"] for user in raw_data if user["active"] and user["score"] >= 70]
+
+# 2. Basic Math on List: Calculate the average score of all users
+all_scores = [user["score"] for user in raw_data]
+average_score = sum(all_scores) / len(all_scores)
+
+print(f"Top Performers: {top_performers}")
+print(f"Average Score: {average_score}")
