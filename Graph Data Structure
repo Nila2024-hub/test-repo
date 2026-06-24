@@ -1,0 +1,24 @@
+class NetworkGraph:
+    def __init__(self):
+        # Using an adjacency list structure: Map each node to a list of neighbors
+        self.graph = {}
+
+    def add_edge(self, node1, node2):
+        # Create nodes if they don't exist, then link them together (Undirected)
+        if node1 not in self.graph: self.graph[node1] = []
+        if node2 not in self.graph: self.graph[node2] = []
+        self.graph[node1].append(node2)
+        self.graph[node2].append(node1)
+
+    def find_connections(self, node):
+        return self.graph.get(node, [])
+
+# Build a mock user network
+network = NetworkGraph()
+network.add_edge("Alice", "Bob")
+network.add_edge("Alice", "Charlie")
+network.add_edge("Bob", "David")
+
+# Query the network structure
+print(f"Alice's direct connections: {network.find_connections('Alice')}")
+print(f"Full Network Map: {network.graph}")
