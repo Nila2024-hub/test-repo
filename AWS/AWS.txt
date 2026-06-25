@@ -1,0 +1,6 @@
+[SERVER]
+IP: 54.116.213.94
+Username: admin
+SSH Key: C:\Users\USER\Downloads\AWS\SSHKey.pem
+웹 폴더: /var/www/html
+
